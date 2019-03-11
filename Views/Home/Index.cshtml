@@ -1,0 +1,88 @@
+@{
+    ViewBag.Title = "Home Page";
+}
+<h2 style="border-bottom:1px solid #e9e9e9; padding-bottom:8px;"> FileExplorer rendered inside dialog</h2>
+<br />
+
+@{
+    List<String> toolsList = new List<string>() {
+"layout",
+"navigation",
+"addressBar",
+"editing",
+"getProperties",
+"searchBar",
+"sortBy"
+
+};
+
+    List<String> navigation = new List<string>() {
+"Back",
+"Forward",
+"Upward"
+};
+    List<String> addressBar = new List<string>() {
+"Addressbar"
+};
+    List<String> editing = new List<string>() {
+"Refresh",
+"Upload",
+"Download"
+};
+
+    List<String> searchBar = new List<string>() {
+"Searchbar"
+};
+
+}
+
+@{
+    Html.EJ()
+    .Dialog("dialog")
+    .Title("Dialog")
+    .ContentType("ajax")
+    .ShowOnInit(true)
+    .ClientSideEvents(e => e.Open("onDialogOpen"))
+    .EnableModal(true)
+    .Width("70%")
+    .Height("70%")
+    .ContentTemplate(@<div>@Html.EJ().FileExplorer("fileExplorer").FileTypes("*.png, *.gif, *.jpg, *.jpeg, *.docx").Path("~/content/images/FileExplorer/").AjaxAction(@Url.Content("/Home/FileActionDefault")).IsResponsive(true).Width("100%").MinWidth("150px").ShowContextMenu(false).AllowMultiSelection(false).Tools(tools => tools.AddressBar(addressBar).Navigation(navigation).Editing(editing).SearchBar(searchBar)).ToolsList(toolsList)</div>)
+	.IsResponsive(true)
+	.EnableResize(false)
+	.Render();
+}
+
+<div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
+                <div class="datTextBox">
+                    Open Dialog
+                    &nbsp;&nbsp;&nbsp;
+                    @Html.EJ().Button("btnNew").Height("30").ContentType(ContentType.TextOnly).Text("Dialog").ClientSideEvents(e => e.Click("OpenDialog")).Type(ButtonType.Button)
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+
+</div>
+
+<script>
+    var isFileExplorerInit = false;
+
+    function OpenDialog() {
+        var dialogObj = $("#dialog").ejDialog("instance");
+        dialogObj.open();
+        dialogObj.restore();
+    }
+
+    function onDialogOpen(args) {
+        if (!isFileExplorerInit) {
+            var fileExplorerObj = $("#fileExplorer").data("ejFileExplorer");
+            fileExplorerObj.adjustSize();
+            isFileExplorerInit = true;
+        }
+    }
+    
+</script>
